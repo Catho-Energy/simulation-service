@@ -8,6 +8,15 @@ class Blockchain:
         self.generate_genesis_block()
 
     def generate_genesis_block(self):
+        #check if the blockchain is empty
+        result = self.mongoClient.get_data('blockchain', {
+            'previous_block_hash': '0'
+        })
+        for item in result:
+            print(item)
+            #if result is not empty return 
+            if item:
+                return
         self.chain.append(Block("0", 'Genesis Block', self.mongoClient))
     
     def create_block_from_data(self, data):
