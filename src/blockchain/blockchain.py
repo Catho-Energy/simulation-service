@@ -1,5 +1,6 @@
 from blockchain.block import Block
-
+import json
+from flask import jsonify
 class Blockchain:
     def __init__(self,client):
         self.chain = []
@@ -14,7 +15,18 @@ class Blockchain:
         self.chain.append(Block(previous_block_hash, data, self.mongoClient))
 
     def display_chain(self):
-        return self.mongoClient.get_data('blockchain',{})
+        #get the chain from the database
+        chain = self.mongoClient.get_data('blockchain', {})
+        #format the data for the JSON response
+        if chain:
+            data = []
+            for item in chain:
+                item['_id'] = str(item['_id'])
+                data.append(item)
+            return data
+        else:
+            return {'message': 'No data found'}, 404
+    
 
     @property
     def last_block(self):

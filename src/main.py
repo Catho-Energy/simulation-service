@@ -18,8 +18,26 @@ chain = myblockchain.display_chain()
 for block in chain:
     print(block)
 
-# # Now I want a flask integration 
-# app = Flask(__name__)
+# Now I want a flask integration 
+app = Flask(__name__)
+@app.route('/')
+def index():
+    # Récupérer des données de la base de données
+    result = myClient.get_data('blockchain', {})
+    
+    # Formater les données pour la réponse JSON
+    if result:
+        data = []
+        for item in result:
+            print(item)
+            item['_id'] = str(item['_id'])
+            data.append(item)
+        return jsonify(data)
+    else:
+        return jsonify({'message': 'Aucune donnée trouvée'}), 404
+
+
+
 # @app.route('/block', methods=['POST'])
 # def create_block():
 #     data = request.get_json()
@@ -32,5 +50,5 @@ for block in chain:
 #     print(chain)
 #     return jsonify({'chain': chain}), 200
 
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
