@@ -13,30 +13,37 @@ class Blockchain:
             'previous_block_hash': '0'
         })
         for item in result:
-            print(item)
             #if result is not empty return 
             if item:
                 return
         self.chain.append(Block("0", 'Genesis Block', self.mongoClient))
+
+    def last_block(self):
+        # retrieve the last block from the database
+        result = self.mongoClient.get_last_block()
     
     def create_block_from_data(self, data):
-        previous_block_hash = self.last_block.block_hash
+        previous_block_hash = self.last_block()
+        print(previous_block_hash)
+
         self.chain.append(Block(previous_block_hash, data, self.mongoClient))
 
     def display_chain(self):
-        #get the chain from the database
-        chain = self.mongoClient.get_data('blockchain', {})
-        #format the data for the JSON response
-        if chain:
+        # Récupérer des données de la base de données
+        result = self.mongoClient.get_data('blockchain', {})
+        # Formater les données pour la réponse JSON
+        if result:
             data = []
-            for item in chain:
+            for item in result:
                 item['_id'] = str(item['_id'])
+                # Vérifier si le champ 'block_data' est une chaîne JSON valide
+                try:
+                    item['block_data'] = json.loads(item['block_data'])
+                except json.JSONDecodeError:
+                    pass  # Ignore si la conversion n'est pas possible
                 data.append(item)
-            return data
+            return jsonify(data)
         else:
-            return {'message': 'No data found'}, 404
+            return jsonify({'message': 'Aucune donnée trouvée'}), 404
     
 
-    @property
-    def last_block(self):
-        return self.chain[-1]

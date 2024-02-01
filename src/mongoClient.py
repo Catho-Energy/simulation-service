@@ -8,7 +8,6 @@ class MongoDBClient:
         self.username = 'dev'
         self.password = 'dev'
         self.client = None
-        self.db = 'blockchain'
 
     def connect(self):
         self.client = MongoClient(self.host, self.port, username=self.username, password=self.password)
@@ -22,8 +21,10 @@ class MongoDBClient:
     
     def find_one(self, query):
         return self.db["blockchain"].blockchain.find_one(query)
-    
-    def count_documents(self, query):
-        return self.db["blockchain"].blockchain.count_documents(query)
+        
+    def get_last_block(self):
+        response = self.db["blockchain"].find({}).sort({'_id':-1}).limit(1);
+        print(response)
+        return response
 
 
