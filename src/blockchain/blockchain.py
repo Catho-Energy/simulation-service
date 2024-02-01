@@ -20,12 +20,11 @@ class Blockchain:
 
     def last_block(self):
         # retrieve the last block from the database
-        result = self.mongoClient.get_last_block()
+        return self.mongoClient.get_last_block()
     
     def create_block_from_data(self, data):
         previous_block_hash = self.last_block()
         print(previous_block_hash)
-
         self.chain.append(Block(previous_block_hash, data, self.mongoClient))
 
     def display_chain(self):

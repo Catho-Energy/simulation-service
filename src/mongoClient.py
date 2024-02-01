@@ -24,7 +24,6 @@ class MongoDBClient:
         
     def get_last_block(self):
         response = self.db["blockchain"].find({}).sort({'_id':-1}).limit(1);
-        print(response)
-        return response
+        return response[0].get('block_hash')
 
 
