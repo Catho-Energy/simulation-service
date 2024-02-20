@@ -14,14 +14,14 @@ CORS(app, origins=["http://localhost:3005"])
 
 
 def validate_data(data):
-    required_keys = ["from", "to", "amount", "type","timestamp"]
+    required_keys = ["from", "to", "amount","price", "type","timestamp"]
     for key in required_keys:
         if key not in data:
             return False
         if key in ["from", "to","timestamp"]:
             if not isinstance(data[key], int):
                 return False
-        elif key == "amount":
+        elif key in ["amount", "price",]:
             if not isinstance(data[key], (int, float)):
                 return False
         elif key == "type":
