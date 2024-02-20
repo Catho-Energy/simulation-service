@@ -3,7 +3,7 @@ from pymongo import MongoClient
 class MongoDBClient:
     def __init__(self):
         self.host = 'localhost'
-        self.port = 27018
+        self.port = 27017
         self.database = 'blockchain'
         self.username = 'dev'
         self.password = 'dev'
@@ -18,10 +18,10 @@ class MongoDBClient:
 
     def get_data(self, collection, query):
         return self.db[collection].find(query)
-    
+
     def find_one(self, query):
         return self.db["blockchain"].blockchain.find_one(query)
-        
+
     def get_last_block(self):
         response = self.db["blockchain"].find({}).sort({'_id':-1}).limit(1);
         return response[0].get('block_hash')
